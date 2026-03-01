@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stockbench
+    username: stockbench
+    password: stockbench
+    hikari:
+      maximum-pool-size: 100
+      minimum-idle: 1
+
+server:
+  port: 8081
