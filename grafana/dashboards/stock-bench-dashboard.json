@@ -1,0 +1,39 @@
+{
+  "title": "StockBench - Optimistic vs Pessimistic",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Throughput (req/s) by lockType",
+      "targets": [
+        {
+          "expr": "sum by (lockType) (rate(stockbench_requests_total[10s]))"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Retries (rate) by lockType",
+      "targets": [
+        {
+          "expr": "sum by (lockType) (rate(stockbench_retries_total[10s]))"
+        }
+      ],
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency p95 (seconds) by lockType",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, lockType) (rate(stockbench_request_latency_seconds_bucket[30s])))"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 }
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "2s"
+}
