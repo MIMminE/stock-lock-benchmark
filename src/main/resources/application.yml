@@ -28,3 +28,4 @@ management:
   metrics:
     tags:
       application: stock-bench
+
