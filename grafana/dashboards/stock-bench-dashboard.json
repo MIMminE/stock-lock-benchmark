@@ -1,39 +1,116 @@
 {
-  "title": "StockBench - Optimistic vs Pessimistic",
+  "title": "StockBench - 낙관적 락 vs 비관적 락 비교",
   "timezone": "browser",
   "panels": [
     {
       "type": "timeseries",
-      "title": "Throughput (req/s) by lockType",
+      "title": "락 방식별 처리량 (req/s)",
       "targets": [
-        {
-          "expr": "sum by (lockType) (rate(stockbench_requests_total[10s]))"
-        }
+        { "expr": "sum by (lockType) (rate(stockbench_requests_total[10s]))" }
       ],
-      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
     },
     {
       "type": "timeseries",
-      "title": "Retries (rate) by lockType",
+      "title": "락 방식별 재시도 (req/s)",
       "targets": [
-        {
-          "expr": "sum by (lockType) (rate(stockbench_retries_total[10s]))"
-        }
+        { "expr": "sum by (lockType) (rate(stockbench_retries_total[10s]))" }
       ],
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 }
     },
     {
       "type": "timeseries",
-      "title": "Latency p95 (seconds) by lockType",
+      "title": "락 방식별 성공률 (%)",
       "targets": [
-        {
-          "expr": "histogram_quantile(0.95, sum by (le, lockType) (rate(stockbench_request_latency_seconds_bucket[30s])))"
-        }
+        { "expr": "100 * (sum by (lockType) (rate(stockbench_success_total[30s])) / sum by (lockType) (rate(stockbench_requests_total[30s])))" }
       ],
-      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 }
+      "gridPos": { "x": 0, "y": 6, "w": 8, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 요청당 재시도",
+      "targets": [
+        { "expr": "sum by (lockType) (rate(stockbench_retries_total[30s])) / sum by (lockType) (rate(stockbench_requests_total[30s]))" }
+      ],
+      "gridPos": { "x": 8, "y": 6, "w": 8, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 성공당 평균 시도 횟수",
+      "description": "Micrometer의 DistributionSummary(sum/count)로 계산",
+      "targets": [
+        { "expr": "sum by (lockType) (rate(stockbench_attempts_per_success_sum[60s])) / sum by (lockType) (rate(stockbench_attempts_per_success_count[60s]))" }
+      ],
+      "gridPos": { "x": 16, "y": 6, "w": 8, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 지연 p95 (초)",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le, lockType) (rate(stockbench_request_latency_seconds_bucket[30s])))" }
+      ],
+      "gridPos": { "x": 0, "y": 12, "w": 8, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 지연 p99 (초)",
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum by (le, lockType) (rate(stockbench_request_latency_seconds_bucket[30s])))" }
+      ],
+      "gridPos": { "x": 8, "y": 12, "w": 8, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 평균 지연 (ms)",
+      "targets": [
+        { "expr": "1000 * (sum by (lockType) (rate(stockbench_request_latency_seconds_sum[30s])) / sum by (lockType) (rate(stockbench_request_latency_seconds_count[30s])))" }
+      ],
+      "gridPos": { "x": 16, "y": 12, "w": 8, "h": 6 }
+    },
+    {
+      "type": "table",
+      "title": "원인별 실패 (락 방식별 비율)",
+      "targets": [
+        { "expr": "sum by (reason, lockType) (rate(stockbench_fail_total[60s]))" }
+      ],
+      "gridPos": { "x": 0, "y": 18, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "락 방식별 요청당 평균 백오프 (ms)",
+      "description": "기록된 백오프 sleep 시간의 평균(밀리초)",
+      "targets": [
+        { "expr": "1000 * (sum by (lockType) (rate(stockbench_backoff_sleep_seconds_sum[60s])) / sum by (lockType) (rate(stockbench_backoff_sleep_seconds_count[60s])))" }
+      ],
+      "gridPos": { "x": 12, "y": 18, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "요청 vs 성공 (req/s) 락 방식별",
+      "targets": [
+        { "expr": "sum by (lockType) (rate(stockbench_requests_total[10s]))", "legendFormat": "requests" },
+        { "expr": "sum by (lockType) (rate(stockbench_success_total[10s]))", "legendFormat": "successes" }
+      ],
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "시간별 성공당 시도 평균 (락 방식별)",
+      "targets": [
+        { "expr": "sum by (lockType) (rate(stockbench_attempts_per_success_sum[60s])) / sum by (lockType) (rate(stockbench_attempts_per_success_count[60s]))" }
+      ],
+      "gridPos": { "x": 0, "y": 32, "w": 12, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "요청당 재시도 (이동평균) 락 방식별",
+      "targets": [
+        { "expr": "sum by (lockType) (rate(stockbench_retries_total[60s])) / sum by (lockType) (rate(stockbench_requests_total[60s]))" }
+      ],
+      "gridPos": { "x": 12, "y": 32, "w": 12, "h": 6 }
     }
   ],
   "schemaVersion": 39,
-  "version": 1,
-  "refresh": "2s"
+  "version": 2,
+  "refresh": "5s"
 }
