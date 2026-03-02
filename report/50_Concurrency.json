@@ -1,0 +1,71 @@
+{
+  "testId" : "c92ce2b6-c581-4157-a803-a6cce09aeff9",
+  "status" : "COMPLETED",
+  "message" : "",
+  "startedAt" : 1772361676.801016100,
+  "finishedAt" : 1772361874.668599800,
+  "concurrency" : 50,
+  "initialStock" : 20000,
+  "backoffMillis" : 5,
+  "maxRetriesPerSuccess" : 500,
+  "targetSuccessCount" : 20000,
+  "phases" : [ {
+    "phase" : "optimistic",
+    "successCount" : 20000,
+    "durationMs" : 147399,
+    "totalRequests" : 20049,
+    "totalRetries" : 187185,
+    "failuresByReason" : {
+      "return_false" : 49
+    },
+    "avgAttemptsPerSuccess" : 10.3278,
+    "avgRequestLatencyMs" : 367.0331687365953,
+    "avgSuccessLatencyMs" : 366.72195,
+    "maxAttempts" : 111,
+    "throughputPerSec" : 135.68613084213598,
+    "successRate" : 0.9975559878298169,
+    "retriesPerRequest" : 9.336375879096215,
+    "totalBackoffMs" : 935925,
+    "requestLatencyPercentiles" : {
+      "p99" : 1822.0,
+      "p90" : 899.0,
+      "p50" : 245.0,
+      "p95" : 1174.0
+    },
+    "successLatencyPercentiles" : {
+      "p99" : 1822.0,
+      "p90" : 890.0,
+      "p50" : 245.0,
+      "p95" : 1163.0
+    }
+  }, {
+    "phase" : "pessimistic",
+    "successCount" : 20000,
+    "durationMs" : 50455,
+    "totalRequests" : 20049,
+    "totalRetries" : 0,
+    "failuresByReason" : {
+      "return_false" : 49
+    },
+    "avgAttemptsPerSuccess" : 1.0,
+    "avgRequestLatencyMs" : 125.24125891565664,
+    "avgSuccessLatencyMs" : 125.1452,
+    "maxAttempts" : 1,
+    "throughputPerSec" : 396.3928252898623,
+    "successRate" : 0.9975559878298169,
+    "retriesPerRequest" : 0.0,
+    "totalBackoffMs" : 0,
+    "requestLatencyPercentiles" : {
+      "p99" : 626.0,
+      "p90" : 305.0,
+      "p50" : 81.0,
+      "p95" : 397.0
+    },
+    "successLatencyPercentiles" : {
+      "p99" : 633.0,
+      "p90" : 309.0,
+      "p50" : 82.0,
+      "p95" : 410.0
+    }
+  } ]
+}

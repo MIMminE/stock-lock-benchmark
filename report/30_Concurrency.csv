@@ -1,0 +1,6 @@
+testId,status,startedAt,finishedAt,concurrency,initialStock,backoffMillis,maxRetriesPerSuccess,targetSuccessCount
+"fb0bdaab-db59-4fed-b667-4e34d48b3a63",COMPLETED,2026-03-01T10:38:04.070218200Z,2026-03-01T10:40:57.079538200Z,30,20000,5,500,20000
+
+phase,successCount,durationMs,totalRequests,totalRetries,avgAttemptsPerSuccess,avgRequestLatencyMs,avgSuccessLatencyMs,maxAttempts,throughputPerSec,successRate,retriesPerRequest,totalBackoffMs,p50_req_ms,p90_req_ms,p95_req_ms,p99_req_ms,p50_succ_ms,p90_succ_ms,p95_succ_ms,p99_succ_ms
+"optimistic",20000,127798,20029,162138,9.092,190.835,190.758,93,156.497,0.999,8.095,810690,119.000,480.000,631.000,1016.000,121.000,488.000,635.000,1013.000
+"pessimistic",20000,45129,20029,0,1.000,67.028,66.970,1,443.174,0.999,0.000,0,46.000,155.000,202.000,326.000,46.000,156.000,205.000,322.000
