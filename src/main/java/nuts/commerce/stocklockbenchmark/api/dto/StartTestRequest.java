@@ -22,7 +22,6 @@ public class StartTestRequest {
     @Min(0) @Max(1_000_000)
     public Integer maxRetriesPerSuccess;
 
-    @NotNull
     @Min(1) @Max(10_000_000)
     public Long targetSuccessCount;
 }
