@@ -7,6 +7,7 @@ import nuts.commerce.stocklockbenchmark.api.dto.TestStatusResponse;
 import nuts.commerce.stocklockbenchmark.service.TestRunnerService;
 import nuts.commerce.stocklockbenchmark.service.runner.RunContext;
 import nuts.commerce.stocklockbenchmark.service.runner.TestRun;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +43,14 @@ public class TestController {
         if (run == null) return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(new TestStatusResponse(run.testId, run.status, run.phase, run.message));
+    }
+
+    @GetMapping(value = "/{testId}/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> report(@PathVariable String testId) {
+        return runnerService.getReportJson(testId)
+                .map(json -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(json))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

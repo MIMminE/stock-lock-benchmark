@@ -31,6 +31,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -136,6 +137,20 @@ public class TestRunnerService {
 
     public TestRun get(String testId) {
         return runs.get(testId);
+    }
+
+    public Optional<String> getReportJson(String testId) {
+        Path file = reportDir().resolve(testId + ".json");
+        if (!Files.exists(file)) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.of(Files.readString(file, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            log.warn("report.read.failed testId={} path={}", testId, file.toAbsolutePath(), e);
+            return Optional.empty();
+        }
     }
 
     private PhaseReport executePhase(String testId, RunContext ctx, StockUpdateService service) throws InterruptedException {
@@ -361,7 +376,7 @@ public class TestRunnerService {
 
     private void saveReportJson(TestReport report) throws IOException {
         ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
-        Path dir = Paths.get("build", "reports", "stockbench");
+        Path dir = reportDir();
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
@@ -371,7 +386,7 @@ public class TestRunnerService {
     }
 
     private void saveReportCsv(TestReport report) throws IOException {
-        Path dir = Paths.get("build", "reports", "stockbench");
+        Path dir = reportDir();
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
@@ -420,6 +435,10 @@ public class TestRunnerService {
     private static String quote(String s) {
         if (s == null) return "";
         return '"' + s.replace("\"", "\\\"") + '"';
+    }
+
+    private static Path reportDir() {
+        return Paths.get("build", "reports", "stockbench");
     }
 
     // 리포트 모델들

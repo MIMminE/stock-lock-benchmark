@@ -1,0 +1,286 @@
+:root {
+  color-scheme: light;
+  --bg: #f5f7fb;
+  --ink: #17202a;
+  --muted: #657184;
+  --line: #d8dee9;
+  --panel: #ffffff;
+  --accent: #116b5f;
+  --accent-2: #b45309;
+  --danger: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.links {
+  display: flex;
+  gap: 10px;
+}
+
+.links a,
+button {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.links a {
+  padding: 9px 12px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  gap: 20px;
+  padding: 20px 32px 32px;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 0;
+}
+
+.status {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status.idle {
+  background: #eef2f7;
+  color: var(--muted);
+}
+
+.status.running {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.status.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.failed {
+  background: #fee2e2;
+  color: var(--danger);
+}
+
+form {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 11px;
+  color: var(--ink);
+  font: inherit;
+}
+
+button {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+form button {
+  margin-top: 4px;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.run-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 16px 18px 18px;
+}
+
+.run-meta div,
+.metrics article {
+  display: grid;
+  gap: 5px;
+}
+
+.run-meta span,
+.metrics span,
+.bars span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.run-meta strong {
+  overflow-wrap: anywhere;
+}
+
+.result {
+  min-width: 0;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px;
+}
+
+.metrics article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.metrics strong {
+  font-size: 24px;
+}
+
+.bars {
+  display: grid;
+  gap: 14px;
+  padding: 0 18px 18px;
+}
+
+.bars > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 92px;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-track {
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef2f7;
+}
+
+.bar {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 260ms ease;
+}
+
+.bar.optimistic {
+  background: var(--accent-2);
+}
+
+.bar.pessimistic {
+  background: var(--accent);
+}
+
+.raw {
+  min-height: 230px;
+  max-height: 420px;
+  overflow: auto;
+  margin: 0 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #101828;
+  color: #e5e7eb;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 22px 18px 16px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .layout,
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .layout {
+    padding: 16px 18px 24px;
+  }
+
+  .bars > div {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .bars b {
+    grid-column: 2;
+  }
+}

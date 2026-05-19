@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Lock Benchmark Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Stock Lock Benchmark</p>
+      <h1>단일 재고 row 경합 실험실</h1>
+    </div>
+    <nav class="links" aria-label="external tools">
+      <a href="/actuator/prometheus" target="_blank" rel="noreferrer">Prometheus</a>
+      <a href="http://localhost:3000" target="_blank" rel="noreferrer">Grafana</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls" aria-labelledby="control-title">
+      <div class="panel-head">
+        <h2 id="control-title">실험 파라미터</h2>
+        <span id="status-pill" class="status idle">Idle</span>
+      </div>
+
+      <form id="benchmark-form">
+        <label>
+          <span>동시성</span>
+          <input name="concurrency" type="number" min="1" max="500" value="50" required>
+        </label>
+        <label>
+          <span>초기 재고</span>
+          <input name="initialStock" type="number" min="1" max="10000000" value="20000" required>
+        </label>
+        <label>
+          <span>목표 성공 건수</span>
+          <input name="targetSuccessCount" type="number" min="1" max="10000000" value="20000" required>
+        </label>
+        <label>
+          <span>Backoff(ms)</span>
+          <input name="backoffMillis" type="number" min="0" max="10000" value="5" required>
+        </label>
+        <label>
+          <span>성공당 최대 재시도</span>
+          <input name="maxRetriesPerSuccess" type="number" min="0" max="1000000" value="500" required>
+        </label>
+        <button id="run-button" type="submit">실험 시작</button>
+      </form>
+
+      <div class="run-meta">
+        <div>
+          <span>Test ID</span>
+          <strong id="test-id">-</strong>
+        </div>
+        <div>
+          <span>현재 Phase</span>
+          <strong id="current-phase">-</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel result" aria-labelledby="result-title">
+      <div class="panel-head">
+        <h2 id="result-title">결과 요약</h2>
+        <button id="load-sample" type="button">샘플 보기</button>
+      </div>
+
+      <div class="metrics">
+        <article>
+          <span>처리량 우위</span>
+          <strong id="throughput-ratio">-</strong>
+        </article>
+        <article>
+          <span>낙관락 재시도</span>
+          <strong id="retry-count">-</strong>
+        </article>
+        <article>
+          <span>p99 개선</span>
+          <strong id="p99-delta">-</strong>
+        </article>
+      </div>
+
+      <div class="bars" aria-label="phase throughput chart">
+        <div>
+          <span>Optimistic</span>
+          <div class="bar-track"><div id="optimistic-bar" class="bar optimistic"></div></div>
+          <b id="optimistic-throughput">-</b>
+        </div>
+        <div>
+          <span>Pessimistic</span>
+          <div class="bar-track"><div id="pessimistic-bar" class="bar pessimistic"></div></div>
+          <b id="pessimistic-throughput">-</b>
+        </div>
+      </div>
+
+      <pre id="raw-report" class="raw" aria-label="raw report output">실험을 시작하면 완료 후 JSON 리포트가 표시됩니다.</pre>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

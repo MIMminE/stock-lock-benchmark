@@ -17,7 +17,7 @@ spring:
         jdbc.time_zone: UTC
         format_sql: false
         show_sql: false
-        # ??? ? ?? ? lock timeout (ms)
+        # Pessimistic lock wait timeout in milliseconds.
         javax.persistence.lock.timeout: 3000
 
 management:
@@ -28,4 +28,3 @@ management:
   metrics:
     tags:
       application: stock-bench
-
