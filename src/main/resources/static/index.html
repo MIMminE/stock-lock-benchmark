@@ -3,25 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stock Lock Benchmark Lab</title>
-  <link rel="stylesheet" href="/styles.css">
+  <title>Stock Lock Benchmark Console</title>
+  <link rel="stylesheet" href="/styles.css?v=20260519-2">
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <p class="eyebrow">Stock Lock Benchmark</p>
-      <h1>단일 재고 row 경합 실험실</h1>
+    <div class="brand">
+      <span class="brand-mark">SL</span>
+      <div>
+        <p class="eyebrow">Inventory Concurrency Lab</p>
+        <h1>재고 락 전략 분석 콘솔</h1>
+      </div>
     </div>
     <nav class="links" aria-label="external tools">
-      <a href="/actuator/prometheus" target="_blank" rel="noreferrer">Prometheus</a>
-      <a href="http://localhost:3000" target="_blank" rel="noreferrer">Grafana</a>
+      <a href="#run">실험 실행</a>
+      <a href="#report">보고서</a>
+      <a href="/actuator/prometheus" target="_blank" rel="noreferrer">
+        <span>Prometheus</span>
+        <small>원시 지표</small>
+      </a>
+      <a href="http://localhost:13000" target="_blank" rel="noreferrer">
+        <span>Grafana</span>
+        <small>시계열 대시보드</small>
+      </a>
     </nav>
   </header>
 
-  <main class="layout">
-    <section class="panel controls" aria-labelledby="control-title">
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Benchmark Objective</p>
+        <h2>같은 재고에 주문이 몰릴 때, 어떤 락 전략이 운영 비용을 줄이는가</h2>
+      </div>
+      <p>
+        왼쪽에서 실험 조건을 정하고, 오른쪽에서 처리량·재시도·지연시간을 비교합니다.
+        Prometheus는 애플리케이션이 노출하는 원시 지표를 확인하는 곳이고, Grafana는 그 지표를 시간 흐름으로 보는 대시보드입니다.
+      </p>
+    </section>
+
+    <section class="summary-band" aria-label="benchmark summary">
+      <article>
+        <span>경합 모델</span>
+        <strong>단일 재고 row</strong>
+      </article>
+      <article>
+        <span>비교 전략</span>
+        <strong>낙관락 vs 비관락</strong>
+      </article>
+      <article>
+        <span>관측 결과</span>
+        <strong>동시성 50 기준 2.92x</strong>
+      </article>
+      <article>
+        <span>핵심 비용</span>
+        <strong>낙관락 재시도 187,185회</strong>
+      </article>
+    </section>
+
+    <section id="run" class="workspace">
+      <section class="panel controls" aria-labelledby="control-title">
       <div class="panel-head">
-        <h2 id="control-title">실험 파라미터</h2>
+        <div>
+          <p class="section-kicker">Step 1</p>
+          <h2 id="control-title">실험 파라미터</h2>
+        </div>
         <span id="status-pill" class="status idle">Idle</span>
       </div>
 
@@ -46,7 +91,7 @@
           <span>성공당 최대 재시도</span>
           <input name="maxRetriesPerSuccess" type="number" min="0" max="1000000" value="500" required>
         </label>
-        <button id="run-button" type="submit">실험 시작</button>
+        <button id="run-button" type="submit">실험 실행</button>
       </form>
 
       <div class="run-meta">
@@ -59,11 +104,14 @@
           <strong id="current-phase">-</strong>
         </div>
       </div>
-    </section>
+      </section>
 
-    <section class="panel result" aria-labelledby="result-title">
+      <section class="panel result" aria-labelledby="result-title">
       <div class="panel-head">
-        <h2 id="result-title">결과 요약</h2>
+        <div>
+          <p class="section-kicker">Step 2</p>
+          <h2 id="result-title">결과 요약</h2>
+        </div>
         <button id="load-sample" type="button">샘플 보기</button>
       </div>
 
@@ -95,10 +143,40 @@
         </div>
       </div>
 
-      <pre id="raw-report" class="raw" aria-label="raw report output">실험을 시작하면 완료 후 JSON 리포트가 표시됩니다.</pre>
+      <div class="insight-grid" aria-label="benchmark interpretation">
+        <article>
+          <span>해석</span>
+          <strong id="winner-text">결과 대기</strong>
+          <p id="winner-detail">실험 또는 샘플 결과를 불러오면 전략별 차이를 요약합니다.</p>
+        </article>
+        <article>
+          <span>운영 포인트</span>
+          <strong id="risk-text">-</strong>
+          <p id="risk-detail">재시도 비용, p99 지연시간, 처리량 차이를 함께 봅니다.</p>
+        </article>
+      </div>
+
+      <details class="raw-wrap">
+        <summary>JSON 리포트 보기</summary>
+        <pre id="raw-report" class="raw" aria-label="raw report output">실험을 시작하면 완료 후 JSON 리포트가 표시됩니다.</pre>
+      </details>
+      </section>
+    </section>
+
+    <section id="report" class="report-panel" aria-labelledby="report-title">
+      <div class="panel-head">
+        <div>
+          <p class="section-kicker">Step 3</p>
+          <h2 id="report-title">분석 보고서</h2>
+        </div>
+        <button id="generate-report" type="button">보고서 초안 생성</button>
+      </div>
+      <div id="report-output" class="report-output">
+        아직 생성된 보고서가 없습니다.
+      </div>
     </section>
   </main>
 
-  <script src="/app.js"></script>
+  <script src="/app.js?v=20260519-2"></script>
 </body>
 </html>

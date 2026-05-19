@@ -4,6 +4,10 @@
 
 ![Benchmark summary](docs/images/benchmark-summary.svg)
 
+![Benchmark console](docs/images/benchmark-console.png)
+
+![Benchmark report](docs/images/benchmark-report.png)
+
 ## 핵심 결과
 
 동시성 50 기준으로 Pessimistic Lock은 Optimistic Lock보다 약 `2.92x` 높은 성공 처리량을 보였고, Optimistic Lock은 `187,185`회의 재시도를 만들었습니다. 동시성 100에서는 처리량 격차가 약 `3.55x`까지 벌어졌습니다.
@@ -20,9 +24,9 @@ docker compose up --build -d
 
 | Target | URL |
 | --- | --- |
-| 실험 UI | http://localhost:8080 |
-| Prometheus | http://localhost:9090 |
-| Grafana | http://localhost:3000 |
+| 실험 UI | http://localhost:18081 |
+| Prometheus | http://localhost:19090 |
+| Grafana | http://localhost:13000 |
 
 UI에서 동시성, 초기 재고, 목표 성공 건수, backoff, 최대 재시도 횟수를 입력하고 실험을 시작할 수 있습니다. 실험은 `optimistic -> reset -> pessimistic` 순서로 실행되며, 완료 후 JSON 리포트가 화면에 표시됩니다.
 
