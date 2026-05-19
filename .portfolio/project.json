@@ -4,30 +4,16 @@
   "subtitle": "재고 핫스팟 락 전략 성능 비교",
   "category": "성능/동시성 실험형",
   "status": "Portfolio Ready",
-  "description": "단일 재고 row에 주문 요청이 몰리는 상황에서 Optimistic Lock과 Pessimistic Lock의 처리량, 지연시간, 재시도 비용을 비교했습니다.",
-  "problem": "재고 차감처럼 쓰기 경합이 집중되는 지점에서는 락 전략 선택이 처리량과 장애 양상에 큰 영향을 줍니다.",
-  "solution": "동시성, 초기 재고, backoff, 목표 성공 건수를 조정할 수 있는 실험 UI와 리포트를 구성했습니다.",
-  "impact": "동시성 이슈를 감으로 말하지 않고 실험 조건과 결과로 설명할 수 있습니다.",
+  "summary": "단일 재고 row에 주문 요청이 몰리는 상황에서 Optimistic Lock과 Pessimistic Lock의 처리량, 지연시간, 재시도 비용을 비교했습니다.",
   "stacks": ["Java", "Spring Boot", "JPA", "PostgreSQL", "Micrometer", "Prometheus", "Grafana"],
-  "highlights": [
-    "Optimistic vs Pessimistic Lock",
-    "성능 리포트",
-    "Grafana Dashboard",
-    "Docker Compose 실험 환경"
-  ],
-  "interviewPoints": [
-    "비관락/낙관락의 장단점을 트래픽 패턴에 맞춰 설명",
-    "재시도 비용이 처리량을 어떻게 잠식하는지 수치 기반 설명",
-    "실험 재현성을 위한 Docker Compose 구성"
-  ],
+  "entryDocument": "docs/benchmark-report.md",
   "coverImage": {
     "path": "docs/images/benchmark-console.png",
     "alt": "Stock Lock Benchmark 실험 콘솔"
   },
   "documents": [
-    { "label": "Benchmark Report", "path": "docs/benchmark-report.md", "type": "docs" },
-    { "label": "Runbook", "path": "docs/runbook.md", "type": "manual" },
-    { "label": "README", "path": "README.md", "type": "docs" }
+    { "label": "README", "path": "README.md", "type": "docs" },
+    { "label": "Runbook", "path": "docs/runbook.md", "type": "manual" }
   ],
   "localDemo": {
     "label": "Benchmark Console",
