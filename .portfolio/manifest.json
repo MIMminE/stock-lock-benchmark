@@ -1,0 +1,25 @@
+{
+  "id": "stock-lock-benchmark",
+  "title": "Stock Lock Benchmark",
+  "subtitle": "재고 핫스팟 락 전략 성능 비교",
+  "category": "성능/동시성 실험형",
+  "status": "Portfolio Ready",
+  "summary": "단일 재고 row에 주문 요청이 몰리는 상황에서 Optimistic Lock과 Pessimistic Lock의 처리량, 지연시간, 재시도 비용을 비교한 실험형 포트폴리오입니다.",
+  "stacks": ["Java", "Spring Boot", "JPA", "PostgreSQL", "Micrometer", "Prometheus", "Grafana"],
+  "repoUrl": "https://github.com/MIMminE/stock-lock-benchmark",
+  "article": "blog/article.md",
+  "coverImage": "docs/images/benchmark-console.png",
+  "coverAlt": "Stock Lock Benchmark 실험 콘솔",
+  "links": [
+    {
+      "label": "Benchmark Report",
+      "url": "docs/benchmark-report.md",
+      "type": "docs"
+    },
+    {
+      "label": "Runbook",
+      "url": "docs/runbook.md",
+      "type": "manual"
+    }
+  ]
+}

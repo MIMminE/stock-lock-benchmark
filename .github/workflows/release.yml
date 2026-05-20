@@ -1,0 +1,67 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag commit is on default line
+        run: |
+          if git ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
+            BASE_BRANCH="main"
+          else
+            BASE_BRANCH="master"
+          fi
+          git fetch origin "${BASE_BRANCH}"
+          git merge-base --is-ancestor "$GITHUB_SHA" "origin/${BASE_BRANCH}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build portfolio package
+        run: node scripts/build-portfolio-package.mjs
+
+      - name: Run Docker Compose smoke test
+        run: bash scripts/smoke-runtime.sh
+
+      - name: Build runtime package
+        run: node scripts/build-runtime-package.mjs
+
+      - name: Archive release assets
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          VERSION="${GITHUB_REF_NAME}"
+          PORTFOLIO_ASSET="${REPO_NAME}-portfolio-package-${VERSION}.zip"
+          RUNTIME_ASSET="${REPO_NAME}-runtime-compose-${VERSION}.zip"
+
+          cd dist/portfolio-package
+          zip -r "../${PORTFOLIO_ASSET}" .
+
+          cd ../runtime-compose
+          zip -r "../${RUNTIME_ASSET}" .
+
+          {
+            echo "RELEASE_ASSETS<<EOF"
+            echo "dist/${PORTFOLIO_ASSET}"
+            echo "dist/${RUNTIME_ASSET}"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.RELEASE_ASSETS }}
+          generate_release_notes: true

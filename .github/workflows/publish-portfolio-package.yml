@@ -1,0 +1,54 @@
+name: Publish Portfolio Package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_ACCESS_KEY_ID_EXISTS: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY_EXISTS: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION_VALUE: ${{ secrets.AWS_REGION }}
+  PORTFOLIO_FEED_BUCKET_VALUE: ${{ secrets.PORTFOLIO_FEED_BUCKET }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build portfolio package
+        run: node scripts/build-portfolio-package.mjs
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stock-lock-benchmark-portfolio-package
+          path: dist/portfolio-package
+
+      - name: Configure AWS credentials
+        if: ${{ env.AWS_ACCESS_KEY_ID_EXISTS != '' && env.AWS_SECRET_ACCESS_KEY_EXISTS != '' && env.AWS_REGION_VALUE != '' && env.PORTFOLIO_FEED_BUCKET_VALUE != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload package to S3
+        if: ${{ env.AWS_ACCESS_KEY_ID_EXISTS != '' && env.AWS_SECRET_ACCESS_KEY_EXISTS != '' && env.AWS_REGION_VALUE != '' && env.PORTFOLIO_FEED_BUCKET_VALUE != '' }}
+        run: |
+          aws s3 sync dist/portfolio-package \
+            "s3://${{ secrets.PORTFOLIO_FEED_BUCKET }}/portfolio-feed/stock-lock-benchmark/" \
+            --delete
+
+      - name: Explain skipped S3 upload
+        if: ${{ env.AWS_ACCESS_KEY_ID_EXISTS == '' || env.AWS_SECRET_ACCESS_KEY_EXISTS == '' || env.AWS_REGION_VALUE == '' || env.PORTFOLIO_FEED_BUCKET_VALUE == '' }}
+        run: |
+          echo "S3 upload skipped."
+          echo "Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, and PORTFOLIO_FEED_BUCKET secrets to enable upload."

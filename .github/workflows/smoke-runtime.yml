@@ -1,0 +1,21 @@
+name: Smoke Runtime
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify dev branch
+        run: |
+          test "${GITHUB_REF_NAME}" = "dev"
+
+      - uses: actions/checkout@v4
+
+      - name: Run Docker Compose smoke test
+        run: bash scripts/smoke-runtime.sh
