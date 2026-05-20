@@ -10,7 +10,11 @@ cleanup() {
 
 trap cleanup EXIT
 
-docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" up -d --build
+if ! docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" up -d --build; then
+  docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" logs
+  echo "Runtime compose startup failed." >&2
+  exit 1
+fi
 
 wait_for_healthy() {
   local service="$1"
