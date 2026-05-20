@@ -51,8 +51,8 @@ for service in postgres app prometheus grafana; do
 done
 
 for attempt in $(seq 1 60); do
-  if curl -fsS http://localhost:18081/actuator/health >/dev/null; then
-    curl -fsS http://localhost:18081 >/dev/null
+  if curl -fsS http://localhost:18081/actuator/health >/dev/null \
+    && curl -fsS http://localhost:18081 >/dev/null; then
     echo "Runtime smoke test passed."
     exit 0
   fi
