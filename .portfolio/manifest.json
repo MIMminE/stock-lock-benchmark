@@ -8,7 +8,7 @@
   "stacks": ["Java", "Spring Boot", "JPA", "PostgreSQL", "Micrometer", "Prometheus", "Grafana"],
   "repoUrl": "https://github.com/MIMminE/stock-lock-benchmark",
   "article": "blog/article.md",
-  "coverImage": "docs/images/benchmark-console.png",
+  "coverImage": "blog/images/01-benchmark-console.png",
   "coverAlt": "Stock Lock Benchmark 실험 콘솔",
   "links": [
     {
