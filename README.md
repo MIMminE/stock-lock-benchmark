@@ -2,6 +2,18 @@
 
 단일 재고 row에 주문 요청이 몰리는 핫스팟 상황을 만들고, Optimistic Lock과 Pessimistic Lock의 처리량, 지연시간, 재시도 비용을 비교한 Spring Boot 기반 실험 프로젝트입니다.
 
+## Portfolio Positioning
+
+이 레포는 취업용 포트폴리오에서 **백엔드 동시성 제어를 실험과 지표로 설명하는 역량**을 보여주기 위한 프로젝트입니다.
+
+| 평가 포인트 | 이 프로젝트에서 보여주는 내용 |
+| --- | --- |
+| 동시성 문제 정의 | 단일 재고 row 핫스팟 상황을 명시적으로 모델링 |
+| 전략 비교 | Optimistic Lock과 Pessimistic Lock을 같은 조건에서 비교 |
+| 지표 기반 해석 | throughput, avg latency, p95/p99, retry 수, 성공당 시도 횟수 분석 |
+| 운영 관점 설명 | 콘솔, 리포트, Grafana/Prometheus 구성으로 결과를 의사결정 자료처럼 정리 |
+| 면접 대응력 | “어떤 락이 좋은가”가 아니라 “어떤 조건에서 어떤 비용이 생기는가”를 설명 |
+
 ![Benchmark summary](docs/images/benchmark-summary.svg)
 
 ![Benchmark console](docs/images/benchmark-console.png)
