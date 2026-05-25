@@ -67,6 +67,10 @@ report                          Saved benchmark snapshots
 grafana                         Provisioned dashboard
 prometheus                      Scrape configuration
 docs                            Report and runbook
+blog                            Portfolio Hub article and images
+.portfolio                      Portfolio Hub manifest
+runtime                         Minimal runtime compose package
+scripts                         Packaging and smoke-test helpers
 ```
 
 ## 기술 스택
@@ -82,6 +86,23 @@ docs                            Report and runbook
 
 - [Benchmark Report](docs/benchmark-report.md)
 - [Runbook](docs/runbook.md)
+- [Portfolio Blog Article](blog/article.md)
+
+## 포트폴리오 허브 패키지
+
+포트폴리오 허브에 게시되는 본문과 이미지는 `blog/`와 `.portfolio/manifest.json`을 기준으로 패키징합니다. 로컬에서 패키지를 만들면 `dist/portfolio-package` 아래에 S3 업로드용 산출물이 생성됩니다.
+
+```bash
+node scripts/build-portfolio-package.mjs
+```
+
+```text
+blog/article.md
+blog/images/*
+.portfolio/manifest.json
+-> dist/portfolio-package/
+-> S3 portfolio-feed/stock-lock-benchmark/
+```
 
 ## 검증
 
