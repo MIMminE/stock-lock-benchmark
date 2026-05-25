@@ -11,6 +11,7 @@ env:
   AWS_SECRET_ACCESS_KEY_EXISTS: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION_VALUE: ${{ secrets.AWS_REGION }}
   PORTFOLIO_FEED_BUCKET_VALUE: ${{ secrets.PORTFOLIO_FEED_BUCKET }}
+  AWS_CLOUDFRONT_DISTRIBUTION_ID_VALUE: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
 jobs:
   publish:
@@ -46,6 +47,13 @@ jobs:
           aws s3 sync dist/portfolio-package \
             "s3://${{ secrets.PORTFOLIO_FEED_BUCKET }}/portfolio-feed/stock-lock-benchmark/" \
             --delete
+
+      - name: Invalidate CloudFront portfolio feed
+        if: ${{ env.AWS_ACCESS_KEY_ID_EXISTS != '' && env.AWS_SECRET_ACCESS_KEY_EXISTS != '' && env.AWS_REGION_VALUE != '' && env.AWS_CLOUDFRONT_DISTRIBUTION_ID_VALUE != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/portfolio-feed/stock-lock-benchmark/*"
 
       - name: Explain skipped S3 upload
         if: ${{ env.AWS_ACCESS_KEY_ID_EXISTS == '' || env.AWS_SECRET_ACCESS_KEY_EXISTS == '' || env.AWS_REGION_VALUE == '' || env.PORTFOLIO_FEED_BUCKET_VALUE == '' }}
