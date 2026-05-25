@@ -11,6 +11,12 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID_VALUE: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY_VALUE: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION_VALUE: ${{ secrets.AWS_REGION }}
+      PORTFOLIO_FEED_BUCKET_VALUE: ${{ secrets.PORTFOLIO_FEED_BUCKET }}
+      AWS_CLOUDFRONT_DISTRIBUTION_ID_VALUE: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
     steps:
       - uses: actions/checkout@v4
@@ -65,3 +71,28 @@ jobs:
         with:
           files: ${{ env.RELEASE_ASSETS }}
           generate_release_notes: true
+
+      - name: Configure AWS credentials
+        if: ${{ env.AWS_ACCESS_KEY_ID_VALUE != '' && env.AWS_SECRET_ACCESS_KEY_VALUE != '' && env.AWS_REGION_VALUE != '' && env.PORTFOLIO_FEED_BUCKET_VALUE != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID_VALUE }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY_VALUE }}
+          aws-region: ${{ env.AWS_REGION_VALUE }}
+
+      - name: Mirror release assets to S3
+        if: ${{ env.AWS_ACCESS_KEY_ID_VALUE != '' && env.AWS_SECRET_ACCESS_KEY_VALUE != '' && env.AWS_REGION_VALUE != '' && env.PORTFOLIO_FEED_BUCKET_VALUE != '' }}
+        run: |
+          aws s3 cp dist "s3://${PORTFOLIO_FEED_BUCKET_VALUE}/artifacts/releases/${GITHUB_REPOSITORY#*/}/${GITHUB_REF_NAME}/" \
+            --recursive \
+            --exclude "*" \
+            --include "*.zip" \
+            --content-type "application/zip" \
+            --cache-control "public,max-age=300"
+
+      - name: Invalidate CloudFront release assets
+        if: ${{ env.AWS_ACCESS_KEY_ID_VALUE != '' && env.AWS_SECRET_ACCESS_KEY_VALUE != '' && env.AWS_REGION_VALUE != '' && env.AWS_CLOUDFRONT_DISTRIBUTION_ID_VALUE != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${AWS_CLOUDFRONT_DISTRIBUTION_ID_VALUE}" \
+            --paths "/artifacts/releases/${GITHUB_REPOSITORY#*/}/${GITHUB_REF_NAME}/*"
