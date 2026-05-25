@@ -11,9 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verify dev branch
+      - name: Verify supported branch
         run: |
-          test "${GITHUB_REF_NAME}" = "dev"
+          case "${GITHUB_REF_NAME}" in
+            main|dev) ;;
+            *) echo "Smoke runtime is intended for main/dev branches."; exit 1 ;;
+          esac
 
       - uses: actions/checkout@v4
 

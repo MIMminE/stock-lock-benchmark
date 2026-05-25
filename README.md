@@ -12,7 +12,7 @@
 | 전략 비교 | Optimistic Lock과 Pessimistic Lock을 같은 조건에서 비교 |
 | 지표 기반 해석 | throughput, avg latency, p95/p99, retry 수, 성공당 시도 횟수 분석 |
 | 운영 관점 설명 | 콘솔, 리포트, Grafana/Prometheus 구성으로 결과를 의사결정 자료처럼 정리 |
-| 면접 대응력 | “어떤 락이 좋은가”가 아니라 “어떤 조건에서 어떤 비용이 생기는가”를 설명 |
+| 설계 설명력 | “어떤 락이 좋은가”가 아니라 “어떤 조건에서 어떤 비용이 생기는가”를 설명 |
 
 ![Benchmark summary](docs/images/benchmark-summary.svg)
 
