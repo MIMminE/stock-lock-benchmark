@@ -12,7 +12,7 @@
   "coverAlt": "Stock Lock Benchmark 실험 콘솔",
   "links": [
     {
-      "label": "Benchmark Report",
+      "label": "벤치마크 리포트",
       "url": "docs/benchmark-report.md",
       "type": "docs"
     },
